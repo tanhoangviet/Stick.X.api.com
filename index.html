@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StickX Bypass</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .embed {
+            border-radius: 5px;
+            background-color: #36393f;
+            color: #ffffff;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .embed-title {
+            font-weight: bold;
+            color: #7289da;
+        }
+        .embed-description {
+            color: #ffffff;
+        }
+        .embed-error {
+            color: #ff0000;
+        }
+    </style>
+    <script>
+        var linksBypassedToday = 0;
+
+        function displayEmbed(data) {
+            var embed = document.createElement("div");
+            embed.className = "embed";
+            
+            var title = document.createElement("div");
+            title.className = "embed-title";
+            title.innerText = "Bypass Result:";
+            embed.appendChild(title);
+            
+            var description = document.createElement("div");
+            description.className = "embed-description";
+            description.innerText = data.message;
+            embed.appendChild(description);
+            
+            document.getElementById("embedResult").appendChild(embed);
+            
+            // Send webhook message if bypass is successful
+            if (data.success) {
+                sendWebhookMessage(data.apiName, data.hwid, data.websiteName, true);
+            }
+        }
+
+        function sendWebhookMessage(apiName, hwid, websiteName, success) {
+            var webhookUrl = "https://discord.com/api/webhooks/1220224008838971412/1K5z4HLu_wtklYMTOiGgKWM_iCzT-sfY8M9ZEL8j0I2YrbHH2j3l7GqbdKJGLIxXxPb1"; // Replace this with your webhook URL
+
+            // Construct the message payload
+            var payload = {
+                content: "",
+                embeds: [{
+                    title: "Bypass Notification",
+                    color: success ? 0x00ff00 : 0xff0000, // Green for success, red for failure
+                    fields: [
+                        { name: "API Name", value: apiName, inline: true },
+                        { name: "HWID", value: hwid, inline: true },
+                        { name: "Status", value: success ? "Successful ✅" : "Failed ❌", inline: true }
+                    ]
+                }]
+            };
+
+            // Send the webhook message
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    console.error("Failed to send webhook message:", response.status, response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error("Error sending webhook message:", error);
+            });
+        }
+
+        // Your existing bypass function remains unchanged
+        function bypass() {
+            var api = document.getElementById("bypassSelect").value;
+            var apiKey = document.getElementById("api_key").value;
+            var param = document.getElementById("param").value;
+            var value = document.getElementById("value").value;
+            var websiteName = "StickX"; // Replace "StickX" with the actual website name
+            
+            var url = api.replace("{" + param + "}", value).replace("{api_key}", apiKey);
+            
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.key) {
+                    displayEmbed({ message: "Bypass successful. Your key is: " + data.key, success: true, apiName: websiteName, hwid: value, websiteName: websiteName });
+                    linksBypassedToday++;
+                    updateLinksBypassedToday();
+                } else {
+                    displayEmbed({ message: "Bypass failed.", success: false });
+                }
+                document.getElementById("resetBtn").style.display = "block";
+            })
+            .catch(error => {
+                displayEmbed({ message: "Error: " + error, success: false });
+                document.getElementById("resetBtn").style.display = "block";
+            });
+        }
+
+        function resetResult() {
+            document.getElementById("embedResult").innerHTML = "";
+            document.getElementById("resetBtn").style.display = "none";
+        }
+
+        function checkAllAPIs() {
+            var bypassOptions = document.querySelectorAll("#bypassSelect option");
+            var api_key = document.getElementById("api_key").value;
+            var statusElement = document.getElementById("apiStatus");
+
+            statusElement.innerHTML = "Checking...";
+
+            bypassOptions.forEach(option => {
+                var api = option.value;
+                var url;
+                switch (api) {
+                    case "https://stickx.top/api-arceusx/?hwid={hwid}&api_key={api_key}":
+                        url = "https://ancient-dew-2472.fly.dev/api?url=dc23f9b079615c2&zone=Europe/Rome&os=android";
+                        break;
+                    case "https://stickx.top/api-codex/?token={token}&api_key={api_key}":
+                        url = "https://ancient-dew-2472.fly.dev/api?url=464138202";
+                        break;
+                    case "https://stickx.top/api-hydrogen/?hwid={hwid}&api_key={api_key}":
+                        url = "https://ancient-dew-2472.fly.dev/api?url=5328364036";
+                        break;
+                    case "https://stickx.top/api-hohohubv/?hwid={hwid}&api_key={api_key}":
+                        url = "https://ancient-dew-2472.fly.dev/api?url=17c51c995d66d1bd31b0b72aca0bd61c9ababd6cd8d08f0931c39618a4a005da";
+                        break;
+                    case "https://stickx.top/api-trigon/?hwid={hwid}&api_key={api_key}":
+                        url = "https://ancient-dew-2472.fly.dev/api?url=351510a3-cae1-4d20-a7be-b1e82e509489";
+                        break;
+                    case "https://stickx.top/api-delta/?hwid={hwid}&api_key={api_key}":
+                        url = "https://ancient-dew-2472.fly.dev/api?url=464138202";
+                        break;
+                    case "https://stickx.top/api-vegax/?hwid={hwid}&api_key={api_key}":
+                        url = "https://ancient-dew-2472.fly.dev/api?url=52c4deb9-aab8-46dc-9492-fe531a92c6fd&provider=linkvertise";
+                        break;
+                    default:
+                        break;
+                }
+
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        statusElement.innerHTML = "✅ All APIs Working";
+                    } else {
+                        statusElement.innerHTML = "❎ Some APIs Not Working";
+                    }
+                })
+                .catch(error => {
+                    statusElement.innerHTML = "❎ Some APIs Not Working";
+                });
+            });
+        }
+        
+        function updateLinksBypassedToday() {
+            document.getElementById("linksBypassedToday").innerText = "Links Bypassed Today: " + linksBypassedToday;
+        }
+    </script>
+</head>
+<body>
+    <h1>StickX Bypass</h1>
+    <p>Your API Key Is: <a href="https://stickx.top/api-key">https://stickx.top/api-key</a></p>
+    <label for="api_key">API Key:</label>
+    <input type="text" id="api_key" name="api_key" required><br><br>
+    <label for="bypassSelect">Select Bypass:</label>
+    <select id="bypassSelect" name="bypassSelect">
+        <option value="https://stickx.top/api-arceusx/?hwid={hwid}&api_key={api_key}">Arceus</option>
+        <option value="https://stickx.top/api-codex/?token={token}&api_key={api_key}">Codex</option>
+        <option value="https://stickx.top/api-hydrogen/?hwid={hwid}&api_key={api_key}">Hydrogen</option>
+        <option value="https://stickx.top/api-hohohubv/?hwid={hwid}&api_key={api_key}">Hohohubv</option>
+        <option value="https://stickx.top/api-trigon/?hwid={hwid}&api_key={api_key}">Trigonevo</option>
+        <option value="https://stickx.top/api-delta/?hwid={hwid}&api_key={api_key}">Delta</option>
+        <option value="https://stickx.top/api-vegax/?hwid={hwid}&api_key={api_key}">VegaX</option>
+    </select><br><br>
+    <label for="param">URL Parameter:</label>
+    <select id="param" name="param">
+        <option value="hwid">HWID</option>
+        <option value="id">ID</option>
+        <option value="token">Token</option>
+    </select><br><br>
+    <label for="value">Parameter Value:</label>
+    <input type="text" id="value" name="value" required><br><br>
+
+    <button onclick="bypass()">Bypass</button><br><br>
+
+    <div id="embedResult"></div>
+    <button id="resetBtn" style="display: none;" onclick="resetResult()">Reset</button>
+
+    <hr>
+
+    <h2>Join our Discord Stick X</h2>
+    <button class="discord-btn" onclick="window.open('https://discord.com/invite/YtzSKHWM', '_blank')">
+        <img src="https://r2.easyimg.io/1chji78jk/image0-1.jpg" alt="Discord Icon" width="20" height="20">
+        Join our Discord Stick X
+    </button>
+
+    <hr>
+
+    <h2>API Status</h2>
+    <button onclick="checkAllAPIs()">Check All APIs</button>
+    <div id="apiStatus"></div>
+
+    <hr>
+
+    <h2>Links Bypassed Today</h2>
+    <div id="linksBypassedToday">Links Bypassed Today: 0</div>
+
+    <script>
+        updateLinksBypassedToday();
+    </script>
+</body>
+  </html>
