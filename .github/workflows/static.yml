@@ -1,0 +1,70 @@
+# Simple workflow for deploying static content to GitHub Pages
+name: Deploy static content to Pages
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Single deploy job since we're just deploying
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload entire repository
+          path: '.'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+---
+title: amongus.memaybeo.ngu
+intro: 'website bypass by memaybeo {% data variables.product.prodname_pages %} site.'
+redirect_from:
+  - /articles/tips-for-configuring-an-a-record-with-your-dns-provider
+  - /articles/adding-or-removing-a-custom-domain-for-your-github-pages-site
+  - /articles/configuring-an-a-record-with-your-dns-provider
+  - /articles/using-a-custom-domain-with-github-pages
+  - /articles/tips-for-configuring-a-cname-record
+  - /articles/setting-up-a-custom-domain-with-pages
+  - /articles/setting-up-a-custom-domain-with-github-pages
+  - /articles/configuring-a-custom-domain-for-your-github-pages-site
+  - /github/working-with-github-pages/configuring-a-custom-domain-for-your-github-pages-site
+product: '{% data reusables.gated-features.pages %}'
+versions:
+  fpt: '*'
+  ghec: '*'
+topics:
+  - Pages
+children:
+  - /about-custom-domains-and-github-pages
+  - /managing-a-custom-domain-for-your-github-pages-site
+  - /verifying-your-custom-domain-for-github-pages
+  - /troubleshooting-custom-domains-and-github-pages
+shortTitle: Configure a custom domain
+---
